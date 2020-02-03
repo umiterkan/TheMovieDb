@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TheMovieDb</string>
+    <string name="tr">TR</string>
+    <string name="eng">ENG</string>
+    <string name="welcome">Welcome</string>
+    <string name="title_categories">Categories</string>
+    <string name="error">Error</string>
+</resources>

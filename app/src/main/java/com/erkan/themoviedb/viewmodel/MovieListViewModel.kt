@@ -26,7 +26,7 @@ class MovieListViewModel @Inject constructor(
 
     fun getMoviewList(categoryId: Int): MutableLiveData<List<Movie>> {
         if (data == null) {
-            data = MutableLiveData<List<Movie>>()
+            data = MutableLiveData()
             requestMovieList(categoryId)
         }
         return data as MutableLiveData<List<Movie>>

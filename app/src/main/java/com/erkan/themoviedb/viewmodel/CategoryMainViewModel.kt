@@ -1,15 +1,14 @@
 package com.erkan.themoviedb.viewmodel
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.erkan.themoviedb.repository.MovieRemoteDataSource
 import com.erkan.themoviedb.service.model.CategoryList
 import com.erkan.themoviedb.service.MovieApiService
-import com.erkan.themoviedb.util.Constants.Companion.APP_LANGUAGE
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.erkan.themoviedb.service.Status
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class CategoryMainViewModel @Inject constructor(
@@ -17,34 +16,37 @@ class CategoryMainViewModel @Inject constructor(
     val providerSharedPreferences: SharedPreferences
 ) : ViewModel() {
 
+    private var movieRemoteDataSource = MovieRemoteDataSource(providerApiService, providerSharedPreferences)
     private var dataMovieCategories: MutableLiveData<CategoryList>? = null
     var error = MutableLiveData<Boolean>()
 
+
+
     fun getCategoryList(): MutableLiveData<CategoryList> {
         if (dataMovieCategories == null) {
-            dataMovieCategories = MutableLiveData<CategoryList>()
+            dataMovieCategories = MutableLiveData()
             requestMovieCategories()
         }
         return dataMovieCategories as MutableLiveData<CategoryList>
     }
 
     fun requestMovieCategories() {
-        providerApiService.getMovieCategories(providerSharedPreferences.getString(APP_LANGUAGE, ""))
-            .enqueue(object : Callback<CategoryList> {
-                override fun onFailure(call: Call<CategoryList>, t: Throwable) {
+        movieRemoteDataSource
+            .getMovieCategory()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    dataMovieCategories?.postValue(it.data)
+                }
+                Status.ERROR -> {
                     error.postValue(true)
-                    Log.d("msg", "CategoryMainViewModel onFailure")
                 }
-
-                override fun onResponse(
-                    call: Call<CategoryList>,
-                    response: Response<CategoryList>
-                ) {
-                    Log.d("msg", "CategoryMainViewModel onResponse")
-                    dataMovieCategories?.postValue(response.body())
+                Status.LOADING -> {
                 }
-            })
-
+            }
+        }
     }
 
 }

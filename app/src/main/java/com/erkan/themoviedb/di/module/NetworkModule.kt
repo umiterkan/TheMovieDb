@@ -2,6 +2,7 @@ package com.erkan.themoviedb.di.module
 
 import com.erkan.themoviedb.BuildConfig
 import com.erkan.themoviedb.service.MovieApiService
+import com.erkan.themoviedb.util.Constants
 import dagger.Module
 import javax.inject.Singleton
 import dagger.Provides
@@ -42,7 +43,7 @@ class NetworkModule {
             override fun intercept(chain: Interceptor.Chain): Response {
                 val original = chain.request()
                 val originalHttpUrl = original.url()
-                val url = originalHttpUrl.newBuilder().addQueryParameter("api_key", "3bb3e67969473d0cb4a48a0dd61af747").build()
+                val url = originalHttpUrl.newBuilder().addQueryParameter(Constants.API_KEY, BuildConfig.API_KEY_THE_MOVIE).build()
                 val requestBuilder = original.newBuilder().url(url)
                 val request = requestBuilder.build();
                 return chain.proceed(request);

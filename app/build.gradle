@@ -24,12 +24,15 @@ android {
         debug {
             buildConfigField("String", "BASE_URL_IMAGE", '"http://image.tmdb.org/t/p/w185/"')
             buildConfigField("String", "BASE_URL", '"https://api.themoviedb.org/3/"')
+            buildConfigField("String", "API_KEY_THE_MOVIE", API_KEY_THE_MOVIE)
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
             buildConfigField("String", "BASE_URL_IMAGE", '"http://image.tmdb.org/t/p/w185/"')
             buildConfigField("String", "BASE_URL", '"https://api.themoviedb.org/3/"')
+            buildConfigField("String", "API_KEY_THE_MOVIE", API_KEY_THE_MOVIE)
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -67,6 +70,8 @@ dependencies {
     //Retrofit ->Service
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+
 
 
     //Dagger -> Dependency Injection
